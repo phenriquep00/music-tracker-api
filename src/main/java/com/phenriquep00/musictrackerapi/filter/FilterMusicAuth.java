@@ -26,7 +26,7 @@ public class FilterMusicAuth extends OncePerRequestFilter{
             throws ServletException, IOException 
         {
             var servletPath = request.getServletPath();
-            if(servletPath.startsWith("/user"))
+            if(servletPath.startsWith("/auth"))
             {
                 filterChain.doFilter(request, response);
                 return;
