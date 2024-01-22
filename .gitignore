@@ -33,4 +33,5 @@ build/
 .vscode/
 
 application.properties
-```
+/music-tracker-api/src/main/resources/application.properties
+
