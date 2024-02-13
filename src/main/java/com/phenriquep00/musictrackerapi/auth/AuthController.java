@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,43 +16,20 @@ import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
-import se.michaelthelin.spotify.model_objects.specification.Artist;
-import se.michaelthelin.spotify.model_objects.specification.Paging;
-import se.michaelthelin.spotify.model_objects.specification.SavedAlbum;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeRequest;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
-import se.michaelthelin.spotify.requests.data.library.GetCurrentUsersSavedAlbumsRequest;
-import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUsersTopArtistsRequest;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/auth")
 public class AuthController {
 
-  @Value("${spring.application.spotify_client_id}")
-  private String clientId;
-
-  @Value("${spring.application.spotify_client_secret}")
-  private String clientSecret;
-
-  private static final URI redirectUri = SpotifyHttpManager.makeUri(
-    "http://localhost:8080/auth/get-user-code/"
-  );
-  private String code = "";
-
-  private SpotifyApi spotifyApi;
-
   public String acessToken = " ";
 
-  @jakarta.annotation.PostConstruct
-  public void initializeSpotifyApi() {
-    this.spotifyApi =
-      new SpotifyApi.Builder()
-        .setClientId(clientId)
-        .setClientSecret(clientSecret)
-        .setRedirectUri(redirectUri)
-        .build();
-  }
+  @Autowired
+  private SpotifyApi spotifyApi;
+
+  private String code = "";
 
   @GetMapping("/login")
   public String getUserCode() {
@@ -112,7 +90,7 @@ public class AuthController {
     return ResponseEntity.status(HttpStatus.OK).body(acessToken);
   }
 
-  // TODO: move this from auth controller to user controler
+  /* // TODO: move this from auth controller to user controler
   @GetMapping("user-top-artists")
   public Artist[] getUserTopArtists() {
     final GetUsersTopArtistsRequest getUsersTopArtistsRequest = spotifyApi
@@ -154,5 +132,5 @@ public class AuthController {
     }
 
     return new SavedAlbum[0];
-  }
+  } */
 }
