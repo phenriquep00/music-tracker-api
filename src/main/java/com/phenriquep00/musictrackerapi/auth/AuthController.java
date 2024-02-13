@@ -3,7 +3,9 @@ package com.phenriquep00.musictrackerapi.auth;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
+import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +15,6 @@ import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
-import se.michaelthelin.spotify.model_objects.specification.Album;
 import se.michaelthelin.spotify.model_objects.specification.Artist;
 import se.michaelthelin.spotify.model_objects.specification.Paging;
 import se.michaelthelin.spotify.model_objects.specification.SavedAlbum;
@@ -40,6 +41,8 @@ public class AuthController {
 
   private SpotifyApi spotifyApi;
 
+  public String acessToken = " ";
+
   @jakarta.annotation.PostConstruct
   public void initializeSpotifyApi() {
     this.spotifyApi =
@@ -54,7 +57,9 @@ public class AuthController {
   public String getUserCode() {
     AuthorizationCodeUriRequest authorizationCodeUriRequest = spotifyApi
       .authorizationCodeUri()
-      .scope("user-read-private, user-read-email, user-top-read, user-library-read")
+      .scope(
+        "user-read-currently-playing, user-read-recently-played, user-read-playback-state, user-top-read, user-modify-playback-state, user-library-read, playlist-read-private, playlist-read-collaborative"
+      )
       .show_dialog(true)
       .build();
 
@@ -96,7 +101,15 @@ public class AuthController {
 
     response.sendRedirect("http://localhost:4200/home");
 
+    System.out.println(spotifyApi.getAccessToken());
+    acessToken = spotifyApi.getAccessToken();
+
     return spotifyApi.getAccessToken();
+  }
+
+  @GetMapping("/token-callback")
+  public ResponseEntity<String> getTokenCallback() {
+    return ResponseEntity.status(HttpStatus.OK).body(acessToken);
   }
 
   // TODO: move this from auth controller to user controler
@@ -121,26 +134,25 @@ public class AuthController {
   }
 
   @GetMapping("user-saved-albums")
-public SavedAlbum[] getUserSavedAlbums() {
+  public SavedAlbum[] getUserSavedAlbums() {
     try {
-        final GetCurrentUsersSavedAlbumsRequest getCurrentUsersSavedAlbumsRequest = spotifyApi
-                .getCurrentUsersSavedAlbums()
-                .limit(10)
-                .offset(0)
-                .build();
+      final GetCurrentUsersSavedAlbumsRequest getCurrentUsersSavedAlbumsRequest = spotifyApi
+        .getCurrentUsersSavedAlbums()
+        .limit(10)
+        .offset(0)
+        .build();
 
-        final Paging<SavedAlbum> albumPaging = getCurrentUsersSavedAlbumsRequest.execute();
+      final Paging<SavedAlbum> albumPaging = getCurrentUsersSavedAlbumsRequest.execute();
 
-        return albumPaging.getItems();
+      return albumPaging.getItems();
     } catch (SpotifyWebApiException e) {
-        System.out.println("Spotify API error: " + e.getMessage());
+      System.out.println("Spotify API error: " + e.getMessage());
     } catch (IOException e) {
-        System.out.println("IO error: " + e.getMessage());
+      System.out.println("IO error: " + e.getMessage());
     } catch (Exception e) {
-        System.out.println("Something went wrong! \n" + e.getMessage());
+      System.out.println("Something went wrong! \n" + e.getMessage());
     }
 
     return new SavedAlbum[0];
-}
-
+  }
 }
