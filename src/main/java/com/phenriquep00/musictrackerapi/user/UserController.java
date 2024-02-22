@@ -17,43 +17,5 @@ import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUser
 @RequestMapping("/user")
 public class UserController {
 
-    @Autowired
-    private SpotifyApi spotifyApi;
-
-    @GetMapping("/top-artists")
-    public Artist[] getUserTopArtists() {
-        final GetUsersTopArtistsRequest getUsersTopArtistsRequest = spotifyApi
-                .getUsersTopArtists()
-                .time_range("medium_term")
-                .limit(10)
-                .offset(5)
-                .build();
-
-        try {
-            final Paging<Artist> artistPaging = getUsersTopArtistsRequest.execute();
-            return artistPaging.getItems();
-        } catch (Exception e) {
-            System.out.println("Something went wrong! \n" + e.getMessage());
-        }
-
-        return new Artist[0];
-    }
-
-    @GetMapping("/saved-albums")
-    public SavedAlbum[] getUserSavedAlbums() {
-        try {
-            final GetCurrentUsersSavedAlbumsRequest getCurrentUsersSavedAlbumsRequest = spotifyApi
-                    .getCurrentUsersSavedAlbums()
-                    .limit(10)
-                    .offset(0)
-                    .build();
-
-            final Paging<SavedAlbum> albumPaging = getCurrentUsersSavedAlbumsRequest.execute();
-            return albumPaging.getItems();
-        } catch (Exception e) {
-            System.out.println("Something went wrong! \n" + e.getMessage());
-        }
-
-        return new SavedAlbum[0];
-    }
+    
 }
