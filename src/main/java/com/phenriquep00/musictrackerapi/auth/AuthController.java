@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.net.URI;
 import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import se.michaelthelin.spotify.SpotifyApi;
-import se.michaelthelin.spotify.SpotifyHttpManager;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeRequest;
@@ -89,48 +87,4 @@ public class AuthController {
   public ResponseEntity<String> getTokenCallback() {
     return ResponseEntity.status(HttpStatus.OK).body(acessToken);
   }
-
-  /* // TODO: move this from auth controller to user controler
-  @GetMapping("user-top-artists")
-  public Artist[] getUserTopArtists() {
-    final GetUsersTopArtistsRequest getUsersTopArtistsRequest = spotifyApi
-      .getUsersTopArtists()
-      .time_range("medium_term")
-      .limit(10)
-      .offset(5)
-      .build();
-
-    try {
-      final Paging<Artist> artistPaging = getUsersTopArtistsRequest.execute();
-
-      return artistPaging.getItems();
-    } catch (Exception e) {
-      System.out.println("Something went wrong! \n" + e.getMessage());
-    }
-
-    return new Artist[0];
-  }
-
-  @GetMapping("user-saved-albums")
-  public SavedAlbum[] getUserSavedAlbums() {
-    try {
-      final GetCurrentUsersSavedAlbumsRequest getCurrentUsersSavedAlbumsRequest = spotifyApi
-        .getCurrentUsersSavedAlbums()
-        .limit(10)
-        .offset(0)
-        .build();
-
-      final Paging<SavedAlbum> albumPaging = getCurrentUsersSavedAlbumsRequest.execute();
-
-      return albumPaging.getItems();
-    } catch (SpotifyWebApiException e) {
-      System.out.println("Spotify API error: " + e.getMessage());
-    } catch (IOException e) {
-      System.out.println("IO error: " + e.getMessage());
-    } catch (Exception e) {
-      System.out.println("Something went wrong! \n" + e.getMessage());
-    }
-
-    return new SavedAlbum[0];
-  } */
 }
