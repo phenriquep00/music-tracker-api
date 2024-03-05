@@ -1,7 +1,5 @@
 package com.phenriquep00.musictrackerapi.album;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import se.michaelthelin.spotify.SpotifyApi;
-import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.specification.Album;
 import se.michaelthelin.spotify.model_objects.specification.Artist;
 import se.michaelthelin.spotify.model_objects.specification.Paging;
