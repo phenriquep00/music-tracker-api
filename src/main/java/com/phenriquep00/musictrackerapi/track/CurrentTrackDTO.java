@@ -5,8 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.model_objects.miscellaneous.CurrentlyPlaying;
 import se.michaelthelin.spotify.model_objects.specification.ArtistSimplified;
-import se.michaelthelin.spotify.model_objects.specification.Track;
-import se.michaelthelin.spotify.requests.data.tracks.GetTrackRequest;
+
 
 @Data
 public class CurrentTrackDTO {

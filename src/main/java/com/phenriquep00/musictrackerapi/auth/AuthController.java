@@ -3,8 +3,8 @@ package com.phenriquep00.musictrackerapi.auth;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
-import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,7 +58,6 @@ public class AuthController {
     try {
       final AuthorizationCodeCredentials authorizationCodeCredentials = authorizationCodeRequest.execute();
 
-      // Set access and refresh token for further "spotifyApi" object usage
       spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
       spotifyApi.setRefreshToken(
         authorizationCodeCredentials.getRefreshToken()
@@ -72,7 +71,9 @@ public class AuthController {
       | SpotifyWebApiException
       | org.apache.hc.core5.http.ParseException e
     ) {
-      System.out.println("Error: " + e.getMessage());
+      System.out.println(
+        "Error: (inside get spotify user code)" + e.getMessage()
+      );
     }
 
     response.sendRedirect("http://localhost:4200/home");

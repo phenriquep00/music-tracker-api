@@ -86,7 +86,7 @@ public class AlbumController {
     try {
       final GetCurrentUsersSavedAlbumsRequest getCurrentUsersSavedAlbumsRequest = spotifyApi
         .getCurrentUsersSavedAlbums()
-        .limit(10)
+        .limit(14)
         .offset(0)
         .build();
 
