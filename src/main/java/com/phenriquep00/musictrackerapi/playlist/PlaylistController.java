@@ -11,15 +11,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.special.FeaturedPlaylists;
 import se.michaelthelin.spotify.model_objects.specification.Paging;
+import se.michaelthelin.spotify.model_objects.specification.Playlist;
 import se.michaelthelin.spotify.model_objects.specification.PlaylistSimplified;
 import se.michaelthelin.spotify.requests.data.browse.GetListOfFeaturedPlaylistsRequest;
 import se.michaelthelin.spotify.requests.data.playlists.GetListOfCurrentUsersPlaylistsRequest;
+import se.michaelthelin.spotify.requests.data.playlists.GetPlaylistRequest;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -78,6 +81,27 @@ public class PlaylistController {
 
       return ResponseEntity.ok(parsedPlaylists);
     } catch (IOException | SpotifyWebApiException | ParseException e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+  }
+
+  @GetMapping("/get-playlist/{playlistId}")
+  public ResponseEntity<PlaylistDTO> getPlaylistById(
+    @PathVariable String playlistId
+  ) {
+    final GetPlaylistRequest getPlaylistRequest = spotifyApi
+      .getPlaylist(playlistId)
+      //          .fields("description")
+      //          .additionalTypes("track,episode")
+      .build();
+
+    try {
+        final Playlist responsePlaylist = getPlaylistRequest.execute();
+        
+        final PlaylistDTO parsedPlaylist = new PlaylistDTO(responsePlaylist);
+        return ResponseEntity.ok(parsedPlaylist);
+
+    } catch (IOException | SpotifyWebApiException | ParseException e){
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
   }
